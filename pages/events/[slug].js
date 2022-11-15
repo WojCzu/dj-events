@@ -9,7 +9,8 @@ const EventPage = ({ event }) => {
   const handleDeleteEvent = e => {
     console.log("delete");
   };
-
+  const { date, time, name, image, performers, description, venue, address } =
+    event.attributes;
   return (
     <Layout>
       <div className={styles.event}>
@@ -23,22 +24,32 @@ const EventPage = ({ event }) => {
         </div>
 
         <span>
-          {new Date(event.date).toLocaleDateString("en-US")} at {event.time}
+          {new Date(date).toLocaleDateString("en-US")} at {time}
         </span>
 
-        <h1>{event.name}</h1>
-        {event.image && (
+        <h1>{name}</h1>
+        {image && (
           <div className={styles.image}>
-            <Image src={event.image} width={960} height={600} />
+            <Image
+              alt={
+                image?.data?.attributes?.alternativeText || "image of the event"
+              }
+              src={
+                image?.data?.attributes?.formats?.medium?.url ||
+                "/images/event-default.png"
+              }
+              width={960}
+              height={600}
+            />
           </div>
         )}
 
         <h2>Performers:</h2>
-        <p>{event.performers}</p>
+        <p>{performers}</p>
         <h2>Description:</h2>
-        <p>{event.description}</p>
-        <h2>Venue: {event.venue}</h2>
-        <p>{event.address}</p>
+        <p>{description}</p>
+        <h2>Venue: {venue}</h2>
+        <p>{address}</p>
 
         <Link href='/events' className={styles.back}>
           {"<"} Go Back
@@ -51,9 +62,11 @@ const EventPage = ({ event }) => {
 export default EventPage;
 
 export async function getServerSideProps({ query: { slug } }) {
-  const res = await fetch(`${API_URL}/api/events/${slug}`);
+  const res = await fetch(
+    `${API_URL}/api/events?filters[slug][$eq]=${slug}&[populate]=*`
+  );
   const events = await res.json();
   return {
-    props: { event: events[0] },
+    props: { event: events.data[0] },
   };
 }
