@@ -1,14 +1,30 @@
 import Layout from "@/components/Layout";
+import { useRouter } from "next/router";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Event.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 
 const EventPage = ({ event }) => {
-  const handleDeleteEvent = e => {
-    console.log("delete");
+  const router = useRouter();
+
+  const handleDeleteEvent = async e => {
+    if (confirm("Are you sure?")) {
+      const res = await fetch(`${API_URL}/api/events/${event.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const { error } = await res.json();
+        toast.error(error?.message || "Something Went Wrong");
+      } else {
+        router.push(`/events`);
+      }
+    }
   };
+
   const { date, time, name, image, performers, description, venue, address } =
     event.attributes;
   return (
@@ -55,6 +71,7 @@ const EventPage = ({ event }) => {
           {"<"} Go Back
         </Link>
       </div>
+      <ToastContainer theme='colored' position='bottom-right' />
     </Layout>
   );
 };
