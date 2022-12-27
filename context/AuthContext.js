@@ -1,32 +1,75 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { NEXT_URL } from "@/config/index";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    isUserLoggedIn();
+  }, []);
 
   const register = async ({ username, email, password }) => {
-    console.log("register", username, email, password);
+    const response = await fetch(`${NEXT_URL}/api/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
+    const { user, message } = await response.json();
+    if (response.ok) {
+      setUser(user);
+      router.push("/account/dashboard");
+    } else {
+      toast.error(message);
+    }
   };
 
   const login = async ({ email: identifier, password }) => {
-    console.log("login", identifier, password);
+    const response = await fetch(`${NEXT_URL}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier, password }),
+    });
+    const { user, message } = await response.json();
+    if (response.ok) {
+      setUser(user);
+      router.push("/account/dashboard");
+    } else {
+      toast.error(message);
+    }
   };
 
   const logout = async () => {
-    console.log("logout");
+    const response = await fetch(`${NEXT_URL}/api/logout`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      setUser(null);
+      router.push("/");
+    }
   };
 
-  const isUserLoggedIn = async user => {
-    console.log(user);
+  const isUserLoggedIn = async () => {
+    const response = await fetch(`${NEXT_URL}/api/user`);
+    const { user } = await response.json();
+    if (response.ok) {
+      setUser(user);
+    } else {
+      setUser(null);
+    }
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, error, register, login, logout, isUserLoggedIn }}
+      value={{ user, register, login, logout, isUserLoggedIn }}
     >
       {children}
+      <ToastContainer theme='colored' position='bottom-right' />
     </AuthContext.Provider>
   );
 };
