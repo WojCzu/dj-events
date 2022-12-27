@@ -1,8 +1,12 @@
 import styles from "@/styles/Header.module.css";
 import Link from "next/link";
 import Search from "./Search";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
+  const { user, logout } = useAuth();
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -16,9 +20,7 @@ const Header = () => {
           <li>
             <Link href={"/events"}>Events</Link>
           </li>
-          <li>
-            <Link href={"/events/add"}>Add Event</Link>
-          </li>
+          {user ? <LoginUserLinks logout={logout} /> : <NotLoginUserLinks />}
         </ul>
       </nav>
     </header>
@@ -26,3 +28,30 @@ const Header = () => {
 };
 
 export default Header;
+
+const LoginUserLinks = ({ logout }) => (
+  <>
+    <li>
+      <Link href={"/events/add"}>Add Event</Link>
+    </li>
+    <li>
+      <Link href={"/account/dashboard"}>Dashboard</Link>
+    </li>
+    <li>
+      <button className='btn-secondary btn-icon' onClick={logout}>
+        <FaSignOutAlt /> Logout
+      </button>
+    </li>
+  </>
+);
+
+const NotLoginUserLinks = () => (
+  <>
+    <li>
+      <Link href={"/account/login"} className='btn-secondary btn-icon'>
+        <FaSignInAlt />
+        Login
+      </Link>
+    </li>
+  </>
+);
