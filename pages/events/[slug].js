@@ -5,6 +5,7 @@ import styles from "@/styles/Event.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 
 const EventPage = ({ event }) => {
