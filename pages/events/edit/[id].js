@@ -201,6 +201,11 @@ export async function getServerSideProps({ req, query: { id } }) {
     `${API_URL}/api/events?filters[id][$eq]=${id}&[populate]=*`
   );
   const events = await res.json();
+  if (!events.data.length) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: { event: events.data[0], jwt },
   };

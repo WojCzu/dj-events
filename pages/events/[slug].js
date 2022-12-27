@@ -53,6 +53,12 @@ export async function getServerSideProps({ query: { slug } }) {
     `${API_URL}/api/events?filters[slug][$eq]=${slug}&[populate]=*`
   );
   const events = await res.json();
+  if (!events.data.length) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: { event: events.data[0] },
   };
