@@ -2,8 +2,9 @@ import DashboardEvent from "@/components/DashboardEvent";
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import { parseCookies } from "@/helpers/index";
-import styles from "@/styles/Dashboard.module.css";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import styles from "@/styles/Dashboard.module.css";
 
 const DashboardPage = ({ events, jwt }) => {
   const router = useRouter();

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { NEXT_URL } from "@/config/index";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 const AuthContext = createContext({});
@@ -69,7 +68,6 @@ export const AuthProvider = ({ children }) => {
       value={{ user, register, login, logout, isUserLoggedIn }}
     >
       {children}
-      <ToastContainer theme='colored' position='bottom-right' />
     </AuthContext.Provider>
   );
 };

@@ -9,7 +9,7 @@ const SearchPage = ({ events }) => {
   const router = useRouter();
   return (
     <Layout title={"Search Results"}>
-      <Link href={"/events"}>Go back</Link>
+      <Link href={"/events"}>{"<"} Go back</Link>
       <h1>Search Results for {router.query.term}:</h1>
       {events.map(event => (
         <EventItem key={event.id} event={event} />

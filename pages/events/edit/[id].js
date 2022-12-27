@@ -4,8 +4,8 @@ import Layout from "@/components/Layout";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
 import Link from "next/link";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Form.module.css";
 import dayjs from "dayjs";
@@ -48,7 +48,8 @@ const EditEventPage = ({ event, jwt }) => {
     e.preventDefault();
     const hasEmptyFields = Object.values(values).some(element => !element);
     if (hasEmptyFields) {
-      return toast.error("please fill in all fields");
+      toast.error("please fill in all fields");
+      return;
     }
 
     const res = await fetch(`${API_URL}/api/events/${id}`, {
@@ -87,7 +88,7 @@ const EditEventPage = ({ event, jwt }) => {
 
   return (
     <Layout title={"Edit Event"}>
-      <Link href={`/events/${slug}`}>{"<"} Go Back</Link>
+      <Link href={"/account/dashboard"}>{"<"} Go Back</Link>
       <h1>Edit Event</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
@@ -188,7 +189,6 @@ const EditEventPage = ({ event, jwt }) => {
       <Modal show={isModal} onClose={() => setIsModal(false)}>
         <ImageUpload eventId={id} imageUploaded={imageUploaded} jwt={jwt} />
       </Modal>
-      <ToastContainer theme='colored' position='bottom-right' />
     </Layout>
   );
 };

@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { FaUser } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import styles from "@/styles/AuthForm.module.css";
 import Layout from "@/components/Layout";
 import Link from "next/link";
@@ -12,7 +11,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const { register, error } = useAuth();
+  const { register } = useAuth();
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -72,8 +71,6 @@ const RegisterPage = () => {
           Already have an account? <Link href='/account/login'>Login</Link>
         </p>
       </div>
-
-      <ToastContainer theme='colored' position='bottom-right' />
     </Layout>
   );
 };

@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { API_URL } from "@/config/index";
-import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/Form.module.css";
 import { parseCookies } from "@/helpers/index";
 
@@ -132,8 +131,6 @@ const AddEventPage = ({ jwt }) => {
 
         <input type='submit' value='Add Event' className='btn' />
       </form>
-
-      <ToastContainer theme='colored' position='bottom-right' />
     </Layout>
   );
 };
