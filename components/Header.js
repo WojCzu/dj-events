@@ -2,7 +2,7 @@ import styles from "@/styles/Header.module.css";
 import Link from "next/link";
 import Search from "./Search";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
   const { user, logout } = useAuth();

@@ -3,7 +3,7 @@ import { FaUser } from "react-icons/fa";
 import styles from "@/styles/AuthForm.module.css";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
