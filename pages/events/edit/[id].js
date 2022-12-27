@@ -11,8 +11,9 @@ import styles from "@/styles/Form.module.css";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { FaImage } from "react-icons/fa";
+import { parseCookies } from "@/helpers/index";
 
-const EditEventPage = ({ event }) => {
+const EditEventPage = ({ event, jwt }) => {
   const { id } = event;
   const {
     name,
@@ -54,12 +55,15 @@ const EditEventPage = ({ event }) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
       },
       body: JSON.stringify({ data: values }),
     });
 
     if (!res.ok) {
-      return toast.error("something went wrong");
+      const { error } = await res.json();
+      toast.error(error?.message || "Something Went Wrong");
+      return;
     }
 
     const { data } = await res.json();
@@ -182,7 +186,7 @@ const EditEventPage = ({ event }) => {
         </button>
       </div>
       <Modal show={isModal} onClose={() => setIsModal(false)}>
-        <ImageUpload eventId={id} imageUploaded={imageUploaded} />
+        <ImageUpload eventId={id} imageUploaded={imageUploaded} jwt={jwt} />
       </Modal>
       <ToastContainer theme='colored' position='bottom-right' />
     </Layout>
@@ -191,12 +195,13 @@ const EditEventPage = ({ event }) => {
 
 export default EditEventPage;
 
-export async function getServerSideProps({ query: { id } }) {
+export async function getServerSideProps({ req, query: { id } }) {
+  const { jwt } = parseCookies(req);
   const res = await fetch(
     `${API_URL}/api/events?filters[id][$eq]=${id}&[populate]=*`
   );
   const events = await res.json();
   return {
-    props: { event: events.data[0] },
+    props: { event: events.data[0], jwt },
   };
 }

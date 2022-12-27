@@ -6,8 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { API_URL } from "@/config/index";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/Form.module.css";
+import { parseCookies } from "@/helpers/index";
 
-const AddEventPage = () => {
+const AddEventPage = ({ jwt }) => {
   const [values, setValues] = useState({
     name: "",
     performers: "",
@@ -31,6 +32,7 @@ const AddEventPage = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
       },
       body: JSON.stringify({ data: values }),
     });
@@ -137,3 +139,13 @@ const AddEventPage = () => {
 };
 
 export default AddEventPage;
+
+export async function getServerSideProps({ req }) {
+  const { jwt } = parseCookies(req);
+
+  return {
+    props: {
+      jwt,
+    },
+  };
+}

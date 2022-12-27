@@ -3,11 +3,28 @@ import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import { parseCookies } from "@/helpers/index";
 import styles from "@/styles/Dashboard.module.css";
+import { useRouter } from "next/router";
 
-const DashboardPage = ({ events }) => {
-  const handleDelete = id => {
-    console.log(id);
+const DashboardPage = ({ events, jwt }) => {
+  const router = useRouter();
+  const handleDelete = async id => {
+    if (confirm("Are you sure?")) {
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      if (!res.ok) {
+        const { error } = await res.json();
+        toast.error(error?.message || "Something Went Wrong");
+        return;
+      }
+      router.replace(router.asPath);
+    }
   };
+
   return (
     <Layout title='User Dashboard'>
       <div className={styles.dash}>
@@ -36,11 +53,11 @@ export async function getServerSideProps({ req }) {
       Authorization: `Bearer ${jwt}`,
     },
   });
-  const data = await res.json();
-
+  const { data } = await res.json();
   return {
     props: {
       events: data,
+      jwt,
     },
   };
 }
