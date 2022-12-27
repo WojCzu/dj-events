@@ -39,7 +39,7 @@ const EventPage = ({ event }) => {
         <p>{address}</p>
 
         <Link href='/events' className={styles.back}>
-          {"<"} Go Back
+          {"<"} Go to all events
         </Link>
       </div>
     </Layout>
